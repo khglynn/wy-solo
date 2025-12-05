@@ -1,10 +1,10 @@
-/* Card Styling - Responsive */
+/* Card Styling - Responsive + Retro */
 
 :root {
   /* Card dimensions - vmin for viewport responsiveness */
   --card-width: min(12vmin, 90px);
   --card-height: calc(var(--card-width) * 1.4);
-  --card-radius: calc(var(--card-width) * 0.05);
+  --card-radius: 3px;
 
   /* Stack offsets */
   --stack-offset: clamp(18px, 3.5vmin, 28px);
@@ -43,24 +43,25 @@
   background-size: contain;
   background-repeat: no-repeat;
   background-position: center;
-  border: 1px solid #333;
-  box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+  border: 1px solid #000;
+  box-shadow: 1px 1px 0 rgba(0, 0, 0, 0.5);
   position: absolute;
   cursor: pointer;
   user-select: none;
   touch-action: none;
-  transition: transform 0.1s ease, box-shadow 0.1s ease;
+  transition: transform 0.08s ease;
+  image-rendering: auto;
 }
 
 /* Card hover state */
-.card:hover {
-  box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.4);
+.card:hover:not(.facedown) {
+  box-shadow: 2px 2px 0 rgba(0, 0, 0, 0.6);
 }
 
 /* Card active/dragging state */
 .card.dragging {
   cursor: grabbing;
-  box-shadow: 4px 4px 8px rgba(0, 0, 0, 0.4);
+  box-shadow: 3px 3px 6px rgba(0, 0, 0, 0.5);
   z-index: 1000 !important;
   transform: scale(1.02);
 }
@@ -72,12 +73,28 @@
 
 /* Card selected state */
 .card.selected {
-  box-shadow: 0 0 0 2px #000080, 2px 2px 4px rgba(0, 0, 0, 0.4);
+  box-shadow: 0 0 0 2px #00ff41, 1px 1px 0 rgba(0, 0, 0, 0.5);
 }
 
-/* Face-down card */
+/* Face-down card - Classic blue crosshatch pattern */
 .card.facedown {
-  background-image: url('../cards/cardback.svg');
+  background-color: #000080;
+  background-image:
+    repeating-linear-gradient(
+      45deg,
+      transparent,
+      transparent 2px,
+      rgba(255,255,255,0.1) 2px,
+      rgba(255,255,255,0.1) 4px
+    ),
+    repeating-linear-gradient(
+      -45deg,
+      transparent,
+      transparent 2px,
+      rgba(255,255,255,0.1) 2px,
+      rgba(255,255,255,0.1) 4px
+    );
+  border: 2px solid #4040a0;
   cursor: default;
 }
 
@@ -91,7 +108,7 @@
   cursor: pointer;
 }
 
-/* Card face images - Generated dynamically via JS */
+/* Card face images */
 .card[data-suit="hearts"][data-rank="1"] { background-image: url('../cards/ace_of_hearts.svg'); }
 .card[data-suit="hearts"][data-rank="2"] { background-image: url('../cards/2_of_hearts.svg'); }
 .card[data-suit="hearts"][data-rank="3"] { background-image: url('../cards/3_of_hearts.svg'); }
@@ -148,33 +165,58 @@
 .card[data-suit="spades"][data-rank="12"] { background-image: url('../cards/queen_of_spades.svg'); }
 .card[data-suit="spades"][data-rank="13"] { background-image: url('../cards/king_of_spades.svg'); }
 
-/* Pile placeholders */
+/* Pile placeholders - Classic card back outline style */
 .pile-placeholder {
   width: var(--card-width);
   height: var(--card-height);
-  border: 2px dashed rgba(255, 255, 255, 0.3);
+  border: 2px solid #000080;
   border-radius: var(--card-radius);
   display: flex;
   align-items: center;
   justify-content: center;
   font-size: calc(var(--card-width) * 0.4);
-  color: rgba(255, 255, 255, 0.3);
+  color: rgba(255, 255, 255, 0.2);
+  background-color: #000060;
+  background-image:
+    repeating-linear-gradient(
+      45deg,
+      transparent,
+      transparent 2px,
+      rgba(255,255,255,0.05) 2px,
+      rgba(255,255,255,0.05) 4px
+    ),
+    repeating-linear-gradient(
+      -45deg,
+      transparent,
+      transparent 2px,
+      rgba(255,255,255,0.05) 2px,
+      rgba(255,255,255,0.05) 4px
+    );
 }
 
 /* Stock pile - show recycle icon when empty */
+.pile.stock.empty .pile-placeholder {
+  cursor: pointer;
+}
+
 .pile.stock.empty .pile-placeholder::after {
   content: '↻';
   font-size: calc(var(--card-width) * 0.5);
+  color: rgba(255, 255, 255, 0.4);
 }
 
 /* Foundation pile - valid drop highlight */
-.pile.foundation.valid-drop {
-  box-shadow: 0 0 0 3px rgba(255, 255, 0, 0.5);
-  border-radius: var(--card-radius);
+.pile.foundation.valid-drop .pile-placeholder,
+.pile.foundation.valid-drop .card:last-child {
+  box-shadow: 0 0 0 2px #00ff41, 0 0 8px rgba(0, 255, 65, 0.5);
 }
 
 /* Tableau pile - valid drop highlight */
 .pile.tableau-pile.valid-drop {
-  background: rgba(255, 255, 0, 0.1);
+  background: rgba(0, 255, 65, 0.1);
   border-radius: var(--card-radius);
+}
+
+.pile.tableau-pile.valid-drop .card:last-child {
+  box-shadow: 0 0 0 2px #00ff41, 1px 1px 0 rgba(0, 0, 0, 0.5);
 }

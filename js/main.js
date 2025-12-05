@@ -7,6 +7,10 @@ const App = {
   timerInterval: null,
   menuOpen: null,
 
+  // Toggle states
+  showTimer: true,
+  showStatusBar: true,
+
   /**
    * Initialize the application
    */
@@ -15,6 +19,9 @@ const App = {
     UI.init();
     Drag.init();
     WinAnimation.init();
+
+    // Load settings from localStorage
+    this.loadSettings();
 
     // Start a new game
     this.newGame();
@@ -25,10 +32,10 @@ const App = {
     this.setupStockClick();
     this.setupKeyboard();
 
-    // Start timer
-    this.startTimer();
+    // Update menu checkmarks
+    this.updateMenuCheckmarks();
 
-    console.log('Solitaire initialized!');
+    console.log('Solitaire initialized! Press W to test win animation.');
   },
 
   /**
@@ -41,14 +48,36 @@ const App = {
     // Initialize game state
     Game.newGame();
 
-    // Load settings from localStorage
-    this.loadSettings();
-
     // Render
     UI.render();
 
     // Reset timer
     this.startTimer();
+  },
+
+  /**
+   * Simulate a win (for testing)
+   */
+  simulateWin() {
+    // Fill all foundations with cards
+    const suits = ['hearts', 'diamonds', 'clubs', 'spades'];
+    Game.state.foundations = suits.map(suit => {
+      const cards = [];
+      for (let rank = 1; rank <= 13; rank++) {
+        cards.push({ suit, rank, faceUp: true, id: `${suit}-${rank}` });
+      }
+      return cards;
+    });
+
+    // Clear everything else
+    Game.state.stock = [];
+    Game.state.waste = [];
+    Game.state.tableau = [[], [], [], [], [], [], []];
+
+    UI.render();
+
+    // Trigger win animation
+    setTimeout(() => WinAnimation.start(), 200);
   },
 
   /**
@@ -59,9 +88,11 @@ const App = {
       clearInterval(this.timerInterval);
     }
 
-    this.timerInterval = setInterval(() => {
-      UI.updateTime();
-    }, 1000);
+    if (this.showTimer) {
+      this.timerInterval = setInterval(() => {
+        UI.updateTime();
+      }, 1000);
+    }
   },
 
   /**
@@ -136,6 +167,32 @@ const App = {
         }
         break;
 
+      case 'toggle-draw':
+        Game.settings.drawCount = Game.settings.drawCount === 1 ? 3 : 1;
+        this.saveSettings();
+        this.updateMenuCheckmarks();
+        break;
+
+      case 'toggle-timer':
+        this.showTimer = !this.showTimer;
+        this.saveSettings();
+        this.updateMenuCheckmarks();
+        if (!this.showTimer) {
+          document.getElementById('time').textContent = '--:--';
+          if (this.timerInterval) clearInterval(this.timerInterval);
+        } else {
+          this.startTimer();
+        }
+        break;
+
+      case 'toggle-status':
+        this.showStatusBar = !this.showStatusBar;
+        document.getElementById('status-bar').style.display =
+          this.showStatusBar ? 'flex' : 'none';
+        this.saveSettings();
+        this.updateMenuCheckmarks();
+        break;
+
       case 'options':
         this.showOptionsModal();
         break;
@@ -147,6 +204,25 @@ const App = {
       case 'about':
         UI.showModal('about-modal');
         break;
+    }
+  },
+
+  /**
+   * Update menu checkmarks based on current settings
+   */
+  updateMenuCheckmarks() {
+    const drawOption = document.getElementById('draw-option');
+    const timerOption = document.getElementById('timer-option');
+    const statusOption = document.getElementById('status-option');
+
+    if (drawOption) {
+      drawOption.classList.toggle('checked', Game.settings.drawCount === 3);
+    }
+    if (timerOption) {
+      timerOption.classList.toggle('checked', this.showTimer);
+    }
+    if (statusOption) {
+      statusOption.classList.toggle('checked', this.showStatusBar);
     }
   },
 
@@ -190,8 +266,8 @@ const App = {
    */
   showOptionsModal() {
     // Set current values
-    document.querySelector(`input[name="draw"][value="${Game.settings.drawCount}"]`).checked = true;
-    document.querySelector(`input[name="scoring"][value="${Game.settings.scoring}"]`).checked = true;
+    const scoringRadio = document.querySelector(`input[name="scoring"][value="${Game.settings.scoring}"]`);
+    if (scoringRadio) scoringRadio.checked = true;
 
     UI.showModal('options-modal');
   },
@@ -200,18 +276,24 @@ const App = {
    * Save options from modal
    */
   saveOptions() {
-    const drawCount = parseInt(document.querySelector('input[name="draw"]:checked').value);
-    const scoring = document.querySelector('input[name="scoring"]:checked').value;
-
-    Game.settings.drawCount = drawCount;
+    const scoring = document.querySelector('input[name="scoring"]:checked')?.value || 'standard';
     Game.settings.scoring = scoring;
+    this.saveSettings();
+  },
 
-    // Save to localStorage
-    localStorage.setItem('solitaire-settings', JSON.stringify(Game.settings));
-
-    // Ask if user wants to start new game with new settings
-    if (Game.state.moves > 0) {
-      // Could show a confirmation, but for simplicity just continue
+  /**
+   * Save settings to localStorage
+   */
+  saveSettings() {
+    try {
+      localStorage.setItem('solitaire-settings', JSON.stringify({
+        drawCount: Game.settings.drawCount,
+        scoring: Game.settings.scoring,
+        showTimer: this.showTimer,
+        showStatusBar: this.showStatusBar,
+      }));
+    } catch (e) {
+      console.warn('Could not save settings:', e);
     }
   },
 
@@ -225,6 +307,13 @@ const App = {
         const settings = JSON.parse(saved);
         Game.settings.drawCount = settings.drawCount || 1;
         Game.settings.scoring = settings.scoring || 'standard';
+        this.showTimer = settings.showTimer !== false;
+        this.showStatusBar = settings.showStatusBar !== false;
+
+        // Apply status bar visibility
+        if (!this.showStatusBar) {
+          document.getElementById('status-bar').style.display = 'none';
+        }
       }
     } catch (e) {
       console.warn('Could not load settings:', e);
@@ -273,10 +362,28 @@ const App = {
           }
           break;
 
+        case 'F2':
+          e.preventDefault();
+          this.newGame();
+          break;
+
+        case 'F1':
+          e.preventDefault();
+          UI.showModal('help-modal');
+          break;
+
         case ' ':
           e.preventDefault();
           if (Game.drawFromStock()) {
             UI.render();
+          }
+          break;
+
+        // Debug: Press W to test win animation
+        case 'w':
+        case 'W':
+          if (!e.ctrlKey && !e.metaKey) {
+            this.simulateWin();
           }
           break;
       }

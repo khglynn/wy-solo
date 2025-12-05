@@ -1,4 +1,4 @@
-/* Game Layout */
+/* Game Layout - Dark Theme */
 
 .game-container {
   flex: 1;
@@ -6,16 +6,17 @@
   overflow: hidden;
 }
 
+/* Classic green felt table */
 .game-table {
   width: 100%;
   height: 100%;
-  background: #008000;
+  background: #0d5a0d;
   background-image:
-    radial-gradient(ellipse at center, #009000 0%, #006800 100%);
-  padding: clamp(8px, 2vmin, 20px);
+    radial-gradient(ellipse at center, #0f6a0f 0%, #0a4a0a 100%);
+  padding: clamp(10px, 2vmin, 20px);
   display: flex;
   flex-direction: column;
-  gap: clamp(12px, 2.5vmin, 24px);
+  gap: clamp(14px, 3vmin, 26px);
 }
 
 /* Top row: Stock, Waste, and Foundations */
@@ -127,10 +128,6 @@
 }
 
 @media (max-width: 400px) {
-  .title-bar-controls {
-    display: none;
-  }
-
   .status-field.moves {
     display: none;
   }
@@ -161,14 +158,13 @@
   }
 }
 
-/* Iframe mode detection - no window chrome */
-.iframe-mode .title-bar,
-.iframe-mode .status-bar {
-  display: none;
+/* Iframe mode detection - minimal chrome */
+.iframe-mode .title-bar {
+  padding: 2px 4px;
 }
 
-.iframe-mode .game-table {
-  border-radius: 0;
+.iframe-mode .status-bar {
+  padding: 2px 4px;
 }
 
 /* High contrast/accessibility */
@@ -189,7 +185,7 @@
   }
 }
 
-/* Print styles - just show the game state */
+/* Print styles */
 @media print {
   .title-bar,
   .menu-bar,
