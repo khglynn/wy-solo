@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <title>Solitaire</title>
+  <link rel="stylesheet" href="css/win95.css">
+  <link rel="stylesheet" href="css/cards.css">
+  <link rel="stylesheet" href="css/game.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>♠</text></svg>">
+</head>
+<body>
+  <div class="window" id="game-window">
+    <!-- Title Bar -->
+    <div class="title-bar">
+      <div class="title-bar-text">Solitaire</div>
+      <div class="title-bar-controls">
+        <button aria-label="Minimize" class="title-bar-btn minimize"></button>
+        <button aria-label="Maximize" class="title-bar-btn maximize"></button>
+        <button aria-label="Close" class="title-bar-btn close"></button>
+      </div>
+    </div>
+
+    <!-- Menu Bar -->
+    <div class="menu-bar">
+      <div class="menu-item" data-menu="game">
+        <span class="menu-label">Game</span>
+        <div class="menu-dropdown">
+          <button class="menu-option" data-action="new-game">Deal</button>
+          <div class="menu-divider"></div>
+          <button class="menu-option" data-action="undo">Undo</button>
+          <div class="menu-divider"></div>
+          <button class="menu-option" data-action="options">Options...</button>
+        </div>
+      </div>
+      <div class="menu-item" data-menu="help">
+        <span class="menu-label">Help</span>
+        <div class="menu-dropdown">
+          <button class="menu-option" data-action="how-to-play">How to Play</button>
+          <div class="menu-divider"></div>
+          <button class="menu-option" data-action="about">About</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Game Area -->
+    <div class="game-container">
+      <div class="game-table">
+        <!-- Top Row: Stock, Waste, Foundations -->
+        <div class="top-row">
+          <div class="stock-waste">
+            <div class="pile stock" id="stock">
+              <div class="pile-placeholder"></div>
+            </div>
+            <div class="pile waste" id="waste"></div>
+          </div>
+          <div class="foundations">
+            <div class="pile foundation" id="foundation-0" data-suit="hearts">
+              <div class="pile-placeholder">♥</div>
+            </div>
+            <div class="pile foundation" id="foundation-1" data-suit="diamonds">
+              <div class="pile-placeholder">♦</div>
+            </div>
+            <div class="pile foundation" id="foundation-2" data-suit="clubs">
+              <div class="pile-placeholder">♣</div>
+            </div>
+            <div class="pile foundation" id="foundation-3" data-suit="spades">
+              <div class="pile-placeholder">♠</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Tableau: 7 columns -->
+        <div class="tableau">
+          <div class="pile tableau-pile" id="tableau-0"></div>
+          <div class="pile tableau-pile" id="tableau-1"></div>
+          <div class="pile tableau-pile" id="tableau-2"></div>
+          <div class="pile tableau-pile" id="tableau-3"></div>
+          <div class="pile tableau-pile" id="tableau-4"></div>
+          <div class="pile tableau-pile" id="tableau-5"></div>
+          <div class="pile tableau-pile" id="tableau-6"></div>
+        </div>
+      </div>
+
+      <!-- Win animation canvas (hidden until win) -->
+      <canvas id="win-canvas"></canvas>
+    </div>
+
+    <!-- Status Bar -->
+    <div class="status-bar">
+      <div class="status-field score">Score: <span id="score">0</span></div>
+      <div class="status-field time">Time: <span id="time">0</span></div>
+      <div class="status-field moves">Moves: <span id="moves">0</span></div>
+    </div>
+  </div>
+
+  <!-- Options Modal -->
+  <div class="modal-overlay" id="options-modal">
+    <div class="modal window">
+      <div class="title-bar">
+        <div class="title-bar-text">Options</div>
+        <div class="title-bar-controls">
+          <button aria-label="Close" class="title-bar-btn close" data-action="close-modal"></button>
+        </div>
+      </div>
+      <div class="modal-content">
+        <fieldset>
+          <legend>Draw</legend>
+          <label class="radio-label">
+            <input type="radio" name="draw" value="1" checked> Draw 1
+          </label>
+          <label class="radio-label">
+            <input type="radio" name="draw" value="3"> Draw 3
+          </label>
+        </fieldset>
+        <fieldset>
+          <legend>Scoring</legend>
+          <label class="radio-label">
+            <input type="radio" name="scoring" value="standard" checked> Standard
+          </label>
+          <label class="radio-label">
+            <input type="radio" name="scoring" value="vegas"> Vegas
+          </label>
+          <label class="radio-label">
+            <input type="radio" name="scoring" value="none"> None
+          </label>
+        </fieldset>
+        <div class="modal-buttons">
+          <button class="win95-btn" data-action="save-options">OK</button>
+          <button class="win95-btn" data-action="close-modal">Cancel</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- About Modal -->
+  <div class="modal-overlay" id="about-modal">
+    <div class="modal window">
+      <div class="title-bar">
+        <div class="title-bar-text">About Solitaire</div>
+        <div class="title-bar-controls">
+          <button aria-label="Close" class="title-bar-btn close" data-action="close-modal"></button>
+        </div>
+      </div>
+      <div class="modal-content about-content">
+        <div class="about-suits">♠ ♥ ♦ ♣</div>
+        <h2>Classic Solitaire</h2>
+        <p class="about-author">Created by Kevin HG</p>
+        <div class="about-links">
+          <a href="https://kevinhg.com" target="_blank" rel="noopener">kevinhg.com</a>
+          <a href="mailto:hello@kevinhg.com">hello@kevinhg.com</a>
+          <a href="https://github.com/khglynn/classic-responsive-solitare" target="_blank" rel="noopener">GitHub</a>
+        </div>
+        <hr>
+        <p class="about-credits">
+          Card artwork from vectorized.io<br>
+          Inspired by Microsoft Solitaire (1990)
+        </p>
+        <div class="modal-buttons">
+          <button class="win95-btn" data-action="close-modal">OK</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- How to Play Modal -->
+  <div class="modal-overlay" id="help-modal">
+    <div class="modal window help-modal">
+      <div class="title-bar">
+        <div class="title-bar-text">How to Play</div>
+        <div class="title-bar-controls">
+          <button aria-label="Close" class="title-bar-btn close" data-action="close-modal"></button>
+        </div>
+      </div>
+      <div class="modal-content help-content">
+        <h3>Objective</h3>
+        <p>Move all cards to the four foundation piles, sorted by suit from Ace to King.</p>
+
+        <h3>Rules</h3>
+        <ul>
+          <li>Build foundations up by suit (A, 2, 3... K)</li>
+          <li>Build tableau piles down by alternating colors</li>
+          <li>Only Kings can be placed on empty tableau spaces</li>
+          <li>Click the stock pile to draw new cards</li>
+        </ul>
+
+        <h3>Controls</h3>
+        <ul>
+          <li><strong>Click</strong> a card to auto-move it if possible</li>
+          <li><strong>Drag</strong> cards to move them manually</li>
+          <li><strong>Double-click</strong> to send to foundation</li>
+        </ul>
+
+        <div class="modal-buttons">
+          <button class="win95-btn" data-action="close-modal">OK</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="js/game.js"></script>
+  <script src="js/ui.js"></script>
+  <script src="js/drag.js"></script>
+  <script src="js/animation.js"></script>
+  <script src="js/main.js"></script>
+</body>
+</html>

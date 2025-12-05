@@ -1,0 +1,180 @@
+/* Card Styling - Responsive */
+
+:root {
+  /* Card dimensions - vmin for viewport responsiveness */
+  --card-width: min(12vmin, 90px);
+  --card-height: calc(var(--card-width) * 1.4);
+  --card-radius: calc(var(--card-width) * 0.05);
+
+  /* Stack offsets */
+  --stack-offset: clamp(18px, 3.5vmin, 28px);
+  --stack-offset-facedown: clamp(4px, 0.8vmin, 8px);
+
+  /* Spacing */
+  --pile-gap: clamp(8px, 1.5vmin, 16px);
+}
+
+/* Container query support for iframe embedding */
+@supports (container-type: inline-size) {
+  .game-container {
+    container-type: inline-size;
+  }
+
+  @container (max-width: 500px) {
+    :root {
+      --card-width: min(13cqw, 70px);
+    }
+  }
+
+  @container (max-width: 400px) {
+    :root {
+      --card-width: min(13cqw, 55px);
+      --stack-offset: clamp(12px, 2.5cqw, 20px);
+    }
+  }
+}
+
+/* Card base */
+.card {
+  width: var(--card-width);
+  height: var(--card-height);
+  border-radius: var(--card-radius);
+  background-color: white;
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  border: 1px solid #333;
+  box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+  position: absolute;
+  cursor: pointer;
+  user-select: none;
+  touch-action: none;
+  transition: transform 0.1s ease, box-shadow 0.1s ease;
+}
+
+/* Card hover state */
+.card:hover {
+  box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.4);
+}
+
+/* Card active/dragging state */
+.card.dragging {
+  cursor: grabbing;
+  box-shadow: 4px 4px 8px rgba(0, 0, 0, 0.4);
+  z-index: 1000 !important;
+  transform: scale(1.02);
+}
+
+/* Cards being dragged along with the main card */
+.card.dragging-child {
+  z-index: 1000 !important;
+}
+
+/* Card selected state */
+.card.selected {
+  box-shadow: 0 0 0 2px #000080, 2px 2px 4px rgba(0, 0, 0, 0.4);
+}
+
+/* Face-down card */
+.card.facedown {
+  background-image: url('../cards/cardback.svg');
+  cursor: default;
+}
+
+/* Face-down but clickable (top of stock) */
+.card.facedown.clickable {
+  cursor: pointer;
+}
+
+/* Last facedown card in tableau - can be clicked to flip */
+.card.facedown.flippable {
+  cursor: pointer;
+}
+
+/* Card face images - Generated dynamically via JS */
+.card[data-suit="hearts"][data-rank="1"] { background-image: url('../cards/ace_of_hearts.svg'); }
+.card[data-suit="hearts"][data-rank="2"] { background-image: url('../cards/2_of_hearts.svg'); }
+.card[data-suit="hearts"][data-rank="3"] { background-image: url('../cards/3_of_hearts.svg'); }
+.card[data-suit="hearts"][data-rank="4"] { background-image: url('../cards/4_of_hearts.svg'); }
+.card[data-suit="hearts"][data-rank="5"] { background-image: url('../cards/5_of_hearts.svg'); }
+.card[data-suit="hearts"][data-rank="6"] { background-image: url('../cards/6_of_hearts.svg'); }
+.card[data-suit="hearts"][data-rank="7"] { background-image: url('../cards/7_of_hearts.svg'); }
+.card[data-suit="hearts"][data-rank="8"] { background-image: url('../cards/8_of_hearts.svg'); }
+.card[data-suit="hearts"][data-rank="9"] { background-image: url('../cards/9_of_hearts.svg'); }
+.card[data-suit="hearts"][data-rank="10"] { background-image: url('../cards/10_of_hearts.svg'); }
+.card[data-suit="hearts"][data-rank="11"] { background-image: url('../cards/jack_of_hearts.svg'); }
+.card[data-suit="hearts"][data-rank="12"] { background-image: url('../cards/queen_of_hearts.svg'); }
+.card[data-suit="hearts"][data-rank="13"] { background-image: url('../cards/king_of_hearts.svg'); }
+
+.card[data-suit="diamonds"][data-rank="1"] { background-image: url('../cards/ace_of_diamonds.svg'); }
+.card[data-suit="diamonds"][data-rank="2"] { background-image: url('../cards/2_of_diamonds.svg'); }
+.card[data-suit="diamonds"][data-rank="3"] { background-image: url('../cards/3_of_diamonds.svg'); }
+.card[data-suit="diamonds"][data-rank="4"] { background-image: url('../cards/4_of_diamonds.svg'); }
+.card[data-suit="diamonds"][data-rank="5"] { background-image: url('../cards/5_of_diamonds.svg'); }
+.card[data-suit="diamonds"][data-rank="6"] { background-image: url('../cards/6_of_diamonds.svg'); }
+.card[data-suit="diamonds"][data-rank="7"] { background-image: url('../cards/7_of_diamonds.svg'); }
+.card[data-suit="diamonds"][data-rank="8"] { background-image: url('../cards/8_of_diamonds.svg'); }
+.card[data-suit="diamonds"][data-rank="9"] { background-image: url('../cards/9_of_diamonds.svg'); }
+.card[data-suit="diamonds"][data-rank="10"] { background-image: url('../cards/10_of_diamonds.svg'); }
+.card[data-suit="diamonds"][data-rank="11"] { background-image: url('../cards/jack_of_diamonds.svg'); }
+.card[data-suit="diamonds"][data-rank="12"] { background-image: url('../cards/queen_of_diamonds.svg'); }
+.card[data-suit="diamonds"][data-rank="13"] { background-image: url('../cards/king_of_diamonds.svg'); }
+
+.card[data-suit="clubs"][data-rank="1"] { background-image: url('../cards/ace_of_clubs.svg'); }
+.card[data-suit="clubs"][data-rank="2"] { background-image: url('../cards/2_of_clubs.svg'); }
+.card[data-suit="clubs"][data-rank="3"] { background-image: url('../cards/3_of_clubs.svg'); }
+.card[data-suit="clubs"][data-rank="4"] { background-image: url('../cards/4_of_clubs.svg'); }
+.card[data-suit="clubs"][data-rank="5"] { background-image: url('../cards/5_of_clubs.svg'); }
+.card[data-suit="clubs"][data-rank="6"] { background-image: url('../cards/6_of_clubs.svg'); }
+.card[data-suit="clubs"][data-rank="7"] { background-image: url('../cards/7_of_clubs.svg'); }
+.card[data-suit="clubs"][data-rank="8"] { background-image: url('../cards/8_of_clubs.svg'); }
+.card[data-suit="clubs"][data-rank="9"] { background-image: url('../cards/9_of_clubs.svg'); }
+.card[data-suit="clubs"][data-rank="10"] { background-image: url('../cards/10_of_clubs.svg'); }
+.card[data-suit="clubs"][data-rank="11"] { background-image: url('../cards/jack_of_clubs.svg'); }
+.card[data-suit="clubs"][data-rank="12"] { background-image: url('../cards/queen_of_clubs.svg'); }
+.card[data-suit="clubs"][data-rank="13"] { background-image: url('../cards/king_of_clubs.svg'); }
+
+.card[data-suit="spades"][data-rank="1"] { background-image: url('../cards/ace_of_spades.svg'); }
+.card[data-suit="spades"][data-rank="2"] { background-image: url('../cards/2_of_spades.svg'); }
+.card[data-suit="spades"][data-rank="3"] { background-image: url('../cards/3_of_spades.svg'); }
+.card[data-suit="spades"][data-rank="4"] { background-image: url('../cards/4_of_spades.svg'); }
+.card[data-suit="spades"][data-rank="5"] { background-image: url('../cards/5_of_spades.svg'); }
+.card[data-suit="spades"][data-rank="6"] { background-image: url('../cards/6_of_spades.svg'); }
+.card[data-suit="spades"][data-rank="7"] { background-image: url('../cards/7_of_spades.svg'); }
+.card[data-suit="spades"][data-rank="8"] { background-image: url('../cards/8_of_spades.svg'); }
+.card[data-suit="spades"][data-rank="9"] { background-image: url('../cards/9_of_spades.svg'); }
+.card[data-suit="spades"][data-rank="10"] { background-image: url('../cards/10_of_spades.svg'); }
+.card[data-suit="spades"][data-rank="11"] { background-image: url('../cards/jack_of_spades.svg'); }
+.card[data-suit="spades"][data-rank="12"] { background-image: url('../cards/queen_of_spades.svg'); }
+.card[data-suit="spades"][data-rank="13"] { background-image: url('../cards/king_of_spades.svg'); }
+
+/* Pile placeholders */
+.pile-placeholder {
+  width: var(--card-width);
+  height: var(--card-height);
+  border: 2px dashed rgba(255, 255, 255, 0.3);
+  border-radius: var(--card-radius);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(var(--card-width) * 0.4);
+  color: rgba(255, 255, 255, 0.3);
+}
+
+/* Stock pile - show recycle icon when empty */
+.pile.stock.empty .pile-placeholder::after {
+  content: '↻';
+  font-size: calc(var(--card-width) * 0.5);
+}
+
+/* Foundation pile - valid drop highlight */
+.pile.foundation.valid-drop {
+  box-shadow: 0 0 0 3px rgba(255, 255, 0, 0.5);
+  border-radius: var(--card-radius);
+}
+
+/* Tableau pile - valid drop highlight */
+.pile.tableau-pile.valid-drop {
+  background: rgba(255, 255, 0, 0.1);
+  border-radius: var(--card-radius);
+}

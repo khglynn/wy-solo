@@ -1,0 +1,209 @@
+/* Game Layout */
+
+.game-container {
+  flex: 1;
+  position: relative;
+  overflow: hidden;
+}
+
+.game-table {
+  width: 100%;
+  height: 100%;
+  background: #008000;
+  background-image:
+    radial-gradient(ellipse at center, #009000 0%, #006800 100%);
+  padding: clamp(8px, 2vmin, 20px);
+  display: flex;
+  flex-direction: column;
+  gap: clamp(12px, 2.5vmin, 24px);
+}
+
+/* Top row: Stock, Waste, and Foundations */
+.top-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.stock-waste {
+  display: flex;
+  gap: var(--pile-gap);
+}
+
+.foundations {
+  display: flex;
+  gap: var(--pile-gap);
+}
+
+/* Pile base styling */
+.pile {
+  position: relative;
+  width: var(--card-width);
+  height: var(--card-height);
+  flex-shrink: 0;
+}
+
+/* Stock pile */
+.pile.stock {
+  cursor: pointer;
+}
+
+/* Waste pile - show up to 3 cards fanned */
+.pile.waste {
+  width: calc(var(--card-width) + var(--pile-gap) * 2);
+}
+
+.pile.waste .card {
+  position: absolute;
+  top: 0;
+}
+
+.pile.waste .card:nth-last-child(3) {
+  left: 0;
+}
+
+.pile.waste .card:nth-last-child(2) {
+  left: var(--pile-gap);
+}
+
+.pile.waste .card:nth-last-child(1) {
+  left: calc(var(--pile-gap) * 2);
+}
+
+/* Tableau area */
+.tableau {
+  display: flex;
+  justify-content: space-between;
+  flex: 1;
+  min-height: 0;
+}
+
+/* Tableau pile */
+.pile.tableau-pile {
+  height: auto;
+  min-height: var(--card-height);
+}
+
+/* Cards in tableau stack vertically */
+.pile.tableau-pile .card {
+  position: absolute;
+  left: 0;
+}
+
+/* Win animation canvas */
+#win-canvas {
+  display: none;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 500;
+}
+
+#win-canvas.active {
+  display: block;
+}
+
+/* Responsive adjustments */
+@media (max-width: 600px) {
+  .menu-bar {
+    font-size: 10px;
+  }
+
+  .status-bar {
+    font-size: 10px;
+  }
+
+  .status-field {
+    min-width: 60px;
+    padding: 1px 4px;
+  }
+
+  .title-bar-text {
+    font-size: 11px;
+  }
+}
+
+@media (max-width: 400px) {
+  .title-bar-controls {
+    display: none;
+  }
+
+  .status-field.moves {
+    display: none;
+  }
+}
+
+/* Landscape phone - reduce top row height impact */
+@media (max-height: 500px) and (orientation: landscape) {
+  .game-table {
+    padding: 6px;
+    gap: 8px;
+  }
+
+  :root {
+    --stack-offset: clamp(10px, 2vmin, 18px);
+    --stack-offset-facedown: clamp(3px, 0.6vmin, 6px);
+  }
+}
+
+/* Touch device optimizations */
+@media (pointer: coarse) {
+  .card {
+    /* Slightly larger touch target */
+    min-width: 44px;
+  }
+
+  .menu-option {
+    padding: 8px 20px;
+  }
+}
+
+/* Iframe mode detection - no window chrome */
+.iframe-mode .title-bar,
+.iframe-mode .status-bar {
+  display: none;
+}
+
+.iframe-mode .game-table {
+  border-radius: 0;
+}
+
+/* High contrast/accessibility */
+@media (prefers-contrast: high) {
+  .card {
+    border-width: 2px;
+  }
+
+  .pile-placeholder {
+    border-width: 3px;
+  }
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .card {
+    transition: none;
+  }
+}
+
+/* Print styles - just show the game state */
+@media print {
+  .title-bar,
+  .menu-bar,
+  .status-bar,
+  .modal-overlay {
+    display: none !important;
+  }
+
+  .game-table {
+    background: white !important;
+  }
+
+  .card {
+    box-shadow: none !important;
+    border: 1px solid black !important;
+  }
+}
