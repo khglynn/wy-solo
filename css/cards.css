@@ -80,26 +80,19 @@
   overflow: hidden;
 }
 
-/* Card hover state - brighten and green glow */
+/* Card hover state - simple green outline (retro) */
 .card:hover {
-  background-color: #222;
-  box-shadow:
-    inset 1px 1px 0 #2a2a2a,
-    inset -1px -1px 0 #0a0a0a,
-    0 0 15px rgba(0, 255, 65, 0.3),
-    0 0 5px rgba(0, 255, 65, 0.2),
-    2px 2px 4px rgba(0, 0, 0, 0.5);
+  outline: 2px solid #00ff41;
+  outline-offset: -2px;
 }
 
 /* Card active/dragging state */
 .card.dragging {
   cursor: grabbing;
-  box-shadow:
-    0 0 20px rgba(0, 255, 65, 0.4),
-    0 0 10px rgba(0, 255, 65, 0.3),
-    4px 4px 8px rgba(0, 0, 0, 0.6);
+  outline: 2px solid #00ff41;
+  outline-offset: -2px;
+  box-shadow: 4px 4px 8px rgba(0, 0, 0, 0.6);
   z-index: 1000 !important;
-  transform: scale(1.02);
 }
 
 /* Cards being dragged along with the main card */
@@ -271,15 +264,13 @@
 /* Foundation pile - valid drop highlight */
 .pile.foundation.valid-drop .pile-placeholder,
 .pile.foundation.valid-drop .card:last-child {
-  box-shadow: 0 0 0 2px #00ff41, 0 0 15px rgba(0, 255, 65, 0.4);
+  outline: 2px solid #00ff41;
+  outline-offset: -2px;
 }
 
 /* Tableau pile - valid drop highlight */
-.pile.tableau-pile.valid-drop {
-  background: rgba(0, 255, 65, 0.05);
-  border-radius: var(--card-radius);
-}
-
+.pile.tableau-pile.valid-drop .pile-placeholder,
 .pile.tableau-pile.valid-drop .card:last-child {
-  box-shadow: 0 0 0 2px #00ff41, 0 0 15px rgba(0, 255, 65, 0.4);
+  outline: 2px solid #00ff41;
+  outline-offset: -2px;
 }
