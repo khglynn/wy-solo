@@ -1,35 +1,75 @@
-# Classic Solitaire
+# SOLITAIRE.EXE
 
-A lightweight, responsive Klondike Solitaire game with authentic Windows 95 aesthetics.
+```
+████████████████████████████████████████████████████████████████
+█                                                              █
+█   WEYLAND-YUTANI RECREATIONAL TERMINAL v3.1                  █
+█   KLONDIKE SOLITAIRE MODULE                                  █
+█   ─────────────────────────────────────────────────────────  █
+█                                                              █
+█   > All games winnable. Productivity loss guaranteed.        █
+█   > Press H for hint. We know you'll need it.                █
+█                                                              █
+████████████████████████████████████████████████████████████████
+```
 
-**[Play Now →](https://classic-responsive-solitare.vercel.app)**
+**[LAUNCH TERMINAL →](https://classic-responsive-solitare.vercel.app)**
 
-![Solitaire Screenshot](screenshot.png)
+<!-- ![Solitaire Screenshot](screenshot.png) -->
 
-## Features
+## SYSTEM REQUIREMENTS
 
-- **Authentic Win95 Look** - Pixel-perfect Windows 95 styling
-- **Fully Responsive** - Scales beautifully from phone to desktop
-- **Touch Friendly** - Works great on mobile and tablet
-- **Classic Win Animation** - The iconic cascading cards celebration
-- **Undo Support** - Made a mistake? Ctrl+Z or use the menu
-- **Draw 1 or Draw 3** - Your choice in settings
-- **No Dependencies** - Pure vanilla JavaScript, HTML, CSS
-- **Iframe Ready** - Embed it anywhere
+- Browser with JavaScript enabled
+- Approximately 47 seconds of your time (minimum)
+- Functioning mouse or touch interface
+- Optional: Coffee
 
-## Controls
+No frameworks. No dependencies. No build step. Just cards.
 
-- **Click** a card to auto-move it to a valid location
-- **Drag** cards to move them manually
-- **Click the stock** (top-left pile) to draw cards
-- **Spacebar** to draw from stock
-- **Ctrl+Z** to undo
-- **Ctrl+N** for new game
+## FEATURES
 
-## Embedding
+```
+[■] GUARANTEED WINNABLE DEALS
+    200 pre-verified seeds. No unwinnable scenarios.
+    Statistical inevitability of success.
 
-This game is designed to be embedded in iframes. The headers are configured to allow framing from any origin.
+[■] INTELLIGENT HINT SYSTEM
+    Press H. Yellow indicators will guide you.
+    The computer knows the optimal path.
 
+[■] RESPONSIVE INTERFACE
+    Functions on desktop terminals and mobile devices.
+    Container-query aware for embedded deployment.
+
+[■] RETRO-AUTHENTIC AESTHETIC
+    Windows 95 chrome. Matrix green accents.
+    Crosshatch background. Appropriate corporate nostalgia.
+```
+
+## CONTROLS
+
+| Input | Action |
+|-------|--------|
+| `Click` | Auto-move card to valid location |
+| `Drag` | Manual card placement |
+| `Space` | Draw from stock |
+| `H` | Request hint |
+| `Ctrl+Z` | Undo previous action |
+| `F2` | New deal |
+| `Esc` | Close menus/modals |
+
+## DEPLOYMENT
+
+### Local Execution
+```bash
+python3 -m http.server 8080
+# Navigate to http://localhost:8080
+```
+
+### Production (Vercel)
+Push to main. Auto-deployment configured.
+
+### Iframe Integration
 ```html
 <iframe
   src="https://classic-responsive-solitare.vercel.app"
@@ -39,57 +79,67 @@ This game is designed to be embedded in iframes. The headers are configured to a
 ></iframe>
 ```
 
-## Development
-
-No build step required - just serve the files:
-
-```bash
-# Using Python
-python -m http.server 8000
-
-# Using Node
-npx serve
-
-# Using PHP
-php -S localhost:8000
-```
-
-Then open http://localhost:8000
-
-## Project Structure
+## TECHNICAL SPECIFICATIONS
 
 ```
-├── index.html          # Main page
-├── css/
-│   ├── win95.css       # Windows 95 UI components
-│   ├── cards.css       # Card styling + responsiveness
-│   └── game.css        # Game layout
-├── js/
-│   ├── game.js         # Game state + rules
-│   ├── ui.js           # DOM rendering
-│   ├── drag.js         # Pointer events handling
-│   ├── animation.js    # Win animation
-│   └── main.js         # App initialization
-├── cards/              # SVG card assets
-└── vercel.json         # Deployment config
+ARCHITECTURE
+├── game.js ......... State engine, rules, seeded RNG, hint algorithm
+├── ui.js ........... DOM rendering, card creation
+├── drag.js ......... Pointer Events API (mouse + touch unified)
+├── animation.js .... Win cascade animation
+└── main.js ......... Application bootstrap, menu handlers
+
+STYLING
+├── win95.css ....... Window chrome, buttons, modals
+├── cards.css ....... Card rendering, responsive scaling
+└── game.css ........ Layout, media queries
+
+CARD RENDERING
+└── CSS-generated ... No images required. Full color control.
+                      Suits rendered via ::before pseudo-elements.
 ```
 
-## Credits
+### Responsive Scaling
+```css
+--card-width: min(12vw, 90px);
+--card-height: calc(var(--card-width) * 1.4);
+--stack-offset: clamp(18px, 3.5vmin, 28px);
+```
 
-- **Card Artwork**: [vectorized.io](https://vectorized.io) (Public Domain)
-- **Inspiration**: Microsoft Solitaire (1990) by Wes Cherry
+### Winnable Seed System
+Linear Congruential Generator ensures reproducible shuffles.
+Seed list curated for guaranteed solvability.
 
-## Author
+## CREDITS
+
+```
+DEVELOPED BY .............. Kevin HG
+ORIGINAL INSPIRATION ...... Microsoft Solitaire (1990)
+AESTHETIC FRAMEWORK ....... recordOS Matrix Theme
+
+"Building a better world."
+    — Weyland-Yutani Corporation
+```
+
+## AUTHOR
 
 **Kevin HG**
-- Website: [kevinhg.com](https://kevinhg.com)
-- Email: [hello@kevinhg.com](mailto:hello@kevinhg.com)
-- GitHub: [@khglynn](https://github.com/khglynn)
+- Terminal: [kevinhg.com](https://kevinhg.com)
+- Transmission: [hello@kevinhg.com](mailto:hello@kevinhg.com)
+- Repository: [@khglynn](https://github.com/khglynn)
 
-## License
+## LICENSE
 
-MIT License - Feel free to use, modify, and distribute.
+MIT. Do whatever you want. We're not liable for time lost.
 
 ---
+
+```
+[TERMINAL OUTPUT]
+> Module loaded successfully.
+> 52 cards initialized.
+> Awaiting user input...
+> _
+```
 
 Built for [recordOS](https://github.com/khglynn/recordOS)
