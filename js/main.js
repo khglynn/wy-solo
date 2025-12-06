@@ -6,6 +6,7 @@
 const App = {
   timerInterval: null,
   menuOpen: null,
+  hintTimeout: null,
 
   // Toggle states
   showTimer: true,
@@ -78,6 +79,68 @@ const App = {
 
     // Trigger win animation
     setTimeout(() => WinAnimation.start(), 200);
+  },
+
+  /**
+   * Show a hint
+   */
+  showHint() {
+    // Clear any existing hint
+    this.clearHint();
+
+    const hint = Game.getHint();
+    if (!hint) {
+      console.log('No hints available');
+      return;
+    }
+
+    // Highlight based on hint type
+    if (hint.action === 'draw' || hint.action === 'reset') {
+      // Highlight stock pile
+      const stock = document.getElementById('stock');
+      stock.classList.add('hint-action');
+    } else {
+      // Highlight the card to move
+      if (hint.from.cardId) {
+        const cardEl = document.querySelector(`[data-card-id="${hint.from.cardId}"]`);
+        if (cardEl) {
+          cardEl.classList.add('hint-from');
+        }
+      }
+
+      // Highlight the destination
+      if (hint.to.location === 'foundation') {
+        const foundation = document.getElementById(`foundation-${hint.to.pileIndex}`);
+        const target = foundation.querySelector('.card:last-child') || foundation.querySelector('.pile-placeholder');
+        if (target) {
+          target.classList.add('hint-to');
+        }
+      } else if (hint.to.location === 'tableau') {
+        const tableau = document.getElementById(`tableau-${hint.to.pileIndex}`);
+        const target = tableau.querySelector('.card:last-child') || tableau.querySelector('.pile-placeholder');
+        if (target) {
+          target.classList.add('hint-to');
+        }
+      }
+    }
+
+    // Auto-clear hint after 2 seconds
+    this.hintTimeout = setTimeout(() => {
+      this.clearHint();
+    }, 2000);
+  },
+
+  /**
+   * Clear hint highlighting
+   */
+  clearHint() {
+    if (this.hintTimeout) {
+      clearTimeout(this.hintTimeout);
+      this.hintTimeout = null;
+    }
+    document.querySelectorAll('.hint-from, .hint-to, .hint-action').forEach(el => {
+      el.classList.remove('hint-from', 'hint-to', 'hint-action');
+    });
   },
 
   /**
@@ -203,6 +266,10 @@ const App = {
 
       case 'about':
         UI.showModal('about-modal');
+        break;
+
+      case 'hint':
+        this.showHint();
         break;
     }
   },
@@ -384,6 +451,15 @@ const App = {
         case 'W':
           if (!e.ctrlKey && !e.metaKey) {
             this.simulateWin();
+          }
+          break;
+
+        // Hint
+        case 'h':
+        case 'H':
+          if (!e.ctrlKey && !e.metaKey) {
+            e.preventDefault();
+            this.showHint();
           }
           break;
       }
