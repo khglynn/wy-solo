@@ -77,8 +77,39 @@ const App = {
 
     UI.render();
 
-    // Trigger win animation
+    // Trigger win animation with callback
+    this.triggerWin();
+  },
+
+  /**
+   * Trigger win animation and show modal after
+   */
+  triggerWin() {
+    // Set callback for when animation ends
+    WinAnimation.onComplete = () => {
+      this.showWinModal();
+    };
+
     setTimeout(() => WinAnimation.start(), 200);
+  },
+
+  /**
+   * Show win modal with stats
+   */
+  showWinModal() {
+    const elapsed = Game.getElapsedTime();
+    const timeStr = Game.formatTime(elapsed);
+    const statsEl = document.getElementById('win-stats');
+
+    if (statsEl) {
+      statsEl.innerHTML = `
+        Score: ${Game.state.score}<br>
+        Time: ${timeStr}<br>
+        Moves: ${Game.state.moves}
+      `;
+    }
+
+    UI.showModal('win-modal');
   },
 
   /**
@@ -308,6 +339,12 @@ const App = {
     document.querySelector('[data-action="save-options"]')?.addEventListener('click', () => {
       this.saveOptions();
       UI.hideAllModals();
+    });
+
+    // Play again button
+    document.querySelector('[data-action="play-again"]')?.addEventListener('click', () => {
+      UI.hideAllModals();
+      this.newGame();
     });
 
     // Click outside modal to close

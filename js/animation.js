@@ -13,6 +13,7 @@ const WinAnimation = {
   cardWidth: 60,
   cardHeight: 84,
   maxTrails: 150,
+  onComplete: null,  // Callback when animation ends
 
   // Card colors matching recordOS theme
   colors: {
@@ -229,7 +230,12 @@ const WinAnimation = {
 
   fadeOut() {
     if (this.trails.length === 0) {
-      setTimeout(() => { this.isRunning = false; }, 500);
+      setTimeout(() => {
+        this.isRunning = false;
+        this.canvas.classList.remove('active');
+        this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+        if (this.onComplete) this.onComplete();
+      }, 300);
       return;
     }
 
@@ -249,7 +255,12 @@ const WinAnimation = {
     if (this.trails.length > 0) {
       requestAnimationFrame(() => this.fadeOut());
     } else {
-      setTimeout(() => { this.isRunning = false; }, 500);
+      setTimeout(() => {
+        this.isRunning = false;
+        this.canvas.classList.remove('active');
+        this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+        if (this.onComplete) this.onComplete();
+      }, 300);
     }
   },
 
@@ -320,11 +331,12 @@ const WinAnimation = {
     ctx.globalAlpha = 1;
   },
 
-  stop() {
+  stop(triggerCallback = true) {
     this.isRunning = false;
     this.particles = [];
     this.trails = [];
     this.canvas.classList.remove('active');
     this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+    if (triggerCallback && this.onComplete) this.onComplete();
   },
 };
