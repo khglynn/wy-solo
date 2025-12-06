@@ -1,4 +1,4 @@
-# SOL.EXE
+# SOLO.EXE
 
 ```
 ████████████████████████████████████████████████████████████████
@@ -139,7 +139,7 @@ MIT. Do whatever you want. We're not liable for time lost.
 
 ```
 [TERMINAL OUTPUT]
-> SOL.EXE loaded successfully.
+> SOLO.EXE loaded successfully.
 > 52 cards initialized.
 > 200 winnable seeds verified.
 > Awaiting user input...
