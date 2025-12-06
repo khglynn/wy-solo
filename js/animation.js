@@ -1,7 +1,7 @@
 /**
  * Win Animation
  * Classic bouncing cards with trail effect
- * Optimized for performance with canvas-drawn cards
+ * Matches recordOS dark card theme
  */
 
 const WinAnimation = {
@@ -12,17 +12,16 @@ const WinAnimation = {
   isRunning: false,
   cardWidth: 60,
   cardHeight: 84,
-  maxTrails: 200,
+  maxTrails: 150,
 
   // Card colors matching recordOS theme
   colors: {
-    red: '#ff4444',
-    black: '#1a1a1a',
-    cardBg: '#f8f8f8',
-    cardBorder: '#2a2a2a'
+    cardBg: '#1a1a1a',
+    cardBorder: '#3a3a3a',
+    red: '#ff4444',      // hearts, diamonds
+    green: '#00ff41'     // spades, clubs
   },
 
-  // Suit symbols
   suits: {
     hearts: '♥',
     diamonds: '♦',
@@ -46,7 +45,7 @@ const WinAnimation = {
       }
     });
 
-    // Escape or any key to dismiss
+    // Escape or space to dismiss
     document.addEventListener('keydown', (e) => {
       if (this.isRunning && (e.key === 'Escape' || e.key === ' ')) {
         e.preventDefault();
@@ -68,9 +67,22 @@ const WinAnimation = {
     this.canvas.height = container.offsetHeight;
     this.canvas.classList.add('active');
 
-    // Calculate card size based on viewport
-    this.cardWidth = Math.min(60, this.canvas.width / 12);
-    this.cardHeight = this.cardWidth * 1.4;
+    // Get actual card size from CSS
+    const rootStyle = getComputedStyle(document.documentElement);
+    const cssCardWidth = rootStyle.getPropertyValue('--card-width');
+
+    // Parse the CSS value (could be "min(12vw, 90px)" etc)
+    // Use a test element to get computed size
+    const testCard = document.querySelector('.card');
+    if (testCard) {
+      const rect = testCard.getBoundingClientRect();
+      this.cardWidth = rect.width;
+      this.cardHeight = rect.height;
+    } else {
+      // Fallback
+      this.cardWidth = Math.min(this.canvas.width * 0.12, 90);
+      this.cardHeight = this.cardWidth * 1.4;
+    }
 
     // Get foundation positions
     const foundationPositions = [];
@@ -84,7 +96,7 @@ const WinAnimation = {
       });
     }
 
-    // Get all cards from foundations (in order: K, Q, J, 10... A for each)
+    // Get all cards from foundations (K first, then Q, J, etc.)
     const allCards = [];
     for (let rank = 13; rank >= 1; rank--) {
       for (let i = 0; i < 4; i++) {
@@ -114,12 +126,12 @@ const WinAnimation = {
         x: pos.x,
         y: pos.y,
         vx: direction * (Math.random() * 4 + 3),
-        vy: -(Math.random() * 6 + 2),
+        vy: -(Math.random() * 5 + 2),
         active: true
       });
 
       cardIndex++;
-    }, 150); // Slower launch rate
+    }, 120);
 
     this.animate();
   },
@@ -127,53 +139,42 @@ const WinAnimation = {
   animate() {
     if (!this.isRunning) return;
 
-    // Clear canvas each frame
-    this.ctx.fillStyle = 'rgba(10, 10, 10, 1)';
+    // Clear canvas
+    this.ctx.fillStyle = '#0a0a0a';
     this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
 
-    // Draw crosshatch background (simplified)
-    this.ctx.strokeStyle = 'rgba(0, 255, 65, 0.04)';
-    this.ctx.lineWidth = 1;
-    for (let i = 0; i < this.canvas.width + this.canvas.height; i += 20) {
-      this.ctx.beginPath();
-      this.ctx.moveTo(i, 0);
-      this.ctx.lineTo(i - this.canvas.height, this.canvas.height);
-      this.ctx.stroke();
-      this.ctx.beginPath();
-      this.ctx.moveTo(i - this.canvas.height, 0);
-      this.ctx.lineTo(i, this.canvas.height);
-      this.ctx.stroke();
-    }
+    // Draw crosshatch background
+    this.drawBackground();
 
-    // Draw trails (older first)
+    // Draw trails (faded)
     for (const trail of this.trails) {
       this.drawCard(trail.card, trail.x, trail.y, trail.alpha);
     }
 
-    // Fade out old trails
+    // Fade trails
     this.trails = this.trails.filter(t => {
-      t.alpha -= 0.02;
+      t.alpha -= 0.015;
       return t.alpha > 0;
     });
 
-    // Limit trail count for performance
+    // Limit trails
     if (this.trails.length > this.maxTrails) {
       this.trails = this.trails.slice(-this.maxTrails);
     }
 
-    const gravity = 0.3;
+    const gravity = 0.35;
     const bounce = 0.7;
     let activeCount = 0;
 
     for (const p of this.particles) {
       if (!p.active) continue;
 
-      // Add trail before moving
+      // Add trail
       this.trails.push({
         card: p.card,
         x: p.x,
         y: p.y,
-        alpha: 0.8
+        alpha: 0.7
       });
 
       // Physics
@@ -192,66 +193,63 @@ const WinAnimation = {
         }
       }
 
-      // Remove if off screen horizontally
+      // Remove if off screen
       if (p.x < -this.cardWidth || p.x > this.canvas.width + this.cardWidth) {
         p.active = false;
         continue;
       }
 
-      // Draw current card position
+      // Draw current card
       this.drawCard(p.card, p.x, p.y, 1);
       activeCount++;
     }
 
-    // Continue if cards are still moving or launching
     if (activeCount > 0 || this.particles.length < 52) {
       requestAnimationFrame(() => this.animate());
     } else {
-      // Keep trails visible for a moment
       this.fadeOut();
+    }
+  },
+
+  drawBackground() {
+    this.ctx.strokeStyle = 'rgba(0, 255, 65, 0.04)';
+    this.ctx.lineWidth = 1;
+    const step = 20;
+    for (let i = -this.canvas.height; i < this.canvas.width + this.canvas.height; i += step) {
+      this.ctx.beginPath();
+      this.ctx.moveTo(i, 0);
+      this.ctx.lineTo(i + this.canvas.height, this.canvas.height);
+      this.ctx.stroke();
+      this.ctx.beginPath();
+      this.ctx.moveTo(i + this.canvas.height, 0);
+      this.ctx.lineTo(i, this.canvas.height);
+      this.ctx.stroke();
     }
   },
 
   fadeOut() {
     if (this.trails.length === 0) {
-      setTimeout(() => {
-        this.isRunning = false;
-      }, 1000);
+      setTimeout(() => { this.isRunning = false; }, 500);
       return;
     }
 
-    this.ctx.fillStyle = 'rgba(10, 10, 10, 1)';
+    this.ctx.fillStyle = '#0a0a0a';
     this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
-
-    // Draw crosshatch
-    this.ctx.strokeStyle = 'rgba(0, 255, 65, 0.04)';
-    this.ctx.lineWidth = 1;
-    for (let i = 0; i < this.canvas.width + this.canvas.height; i += 20) {
-      this.ctx.beginPath();
-      this.ctx.moveTo(i, 0);
-      this.ctx.lineTo(i - this.canvas.height, this.canvas.height);
-      this.ctx.stroke();
-      this.ctx.beginPath();
-      this.ctx.moveTo(i - this.canvas.height, 0);
-      this.ctx.lineTo(i, this.canvas.height);
-      this.ctx.stroke();
-    }
+    this.drawBackground();
 
     for (const trail of this.trails) {
       this.drawCard(trail.card, trail.x, trail.y, trail.alpha);
     }
 
     this.trails = this.trails.filter(t => {
-      t.alpha -= 0.03;
+      t.alpha -= 0.025;
       return t.alpha > 0;
     });
 
     if (this.trails.length > 0) {
       requestAnimationFrame(() => this.fadeOut());
     } else {
-      setTimeout(() => {
-        this.isRunning = false;
-      }, 1000);
+      setTimeout(() => { this.isRunning = false; }, 500);
     }
   },
 
@@ -260,11 +258,11 @@ const WinAnimation = {
     const w = this.cardWidth;
     const h = this.cardHeight;
     const isRed = card.suit === 'hearts' || card.suit === 'diamonds';
-    const color = isRed ? this.colors.red : this.colors.black;
+    const suitColor = isRed ? this.colors.red : this.colors.green;
 
     ctx.globalAlpha = alpha;
 
-    // Card background
+    // Card background (dark like our CSS cards)
     ctx.fillStyle = this.colors.cardBg;
     ctx.fillRect(x, y, w, h);
 
@@ -273,25 +271,51 @@ const WinAnimation = {
     ctx.lineWidth = 1;
     ctx.strokeRect(x, y, w, h);
 
-    // Rank and suit
-    ctx.fillStyle = color;
-    ctx.font = `bold ${Math.floor(w * 0.35)}px VT323, monospace`;
-    ctx.textAlign = 'left';
-    ctx.textBaseline = 'top';
+    // Inner shadow effect (subtle)
+    ctx.strokeStyle = 'rgba(0,0,0,0.3)';
+    ctx.strokeRect(x + 1, y + 1, w - 2, h - 2);
+
+    // Rank and suit in suit color
+    ctx.fillStyle = suitColor;
 
     const rank = this.rankDisplay[card.rank];
     const suit = this.suits[card.suit];
+    const fontSize = Math.floor(w * 0.28);
+    const suitSize = Math.floor(w * 0.18);
+    const centerSize = Math.floor(w * 0.45);
 
-    // Top left
-    ctx.fillText(rank, x + 3, y + 2);
-    ctx.font = `${Math.floor(w * 0.3)}px serif`;
-    ctx.fillText(suit, x + 3, y + w * 0.3);
+    // Top-left corner
+    ctx.font = `${fontSize}px VT323, monospace`;
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'top';
+    ctx.fillText(rank, x + w * 0.2, y + 3);
 
-    // Center suit (larger)
-    ctx.font = `${Math.floor(w * 0.5)}px serif`;
+    ctx.font = `${suitSize}px serif`;
+    ctx.fillText(suit, x + w * 0.2, y + fontSize + 2);
+
+    // Center suit (or letter for face cards)
+    ctx.font = `${centerSize}px serif`;
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
-    ctx.fillText(suit, x + w / 2, y + h / 2);
+
+    if (card.rank >= 11) {
+      // Face card - show letter
+      ctx.font = `${centerSize}px VT323, monospace`;
+      ctx.fillText(rank, x + w / 2, y + h / 2);
+    } else {
+      ctx.fillText(suit, x + w / 2, y + h / 2);
+    }
+
+    // Bottom-right corner (rotated)
+    ctx.save();
+    ctx.translate(x + w - w * 0.2, y + h - 3);
+    ctx.rotate(Math.PI);
+    ctx.font = `${fontSize}px VT323, monospace`;
+    ctx.textBaseline = 'top';
+    ctx.fillText(rank, 0, 0);
+    ctx.font = `${suitSize}px serif`;
+    ctx.fillText(suit, 0, fontSize - 1);
+    ctx.restore();
 
     ctx.globalAlpha = 1;
   },

@@ -149,47 +149,48 @@
 @media (max-width: 500px) {
   .game-table {
     padding: 6px;
-    gap: 8px;
+    gap: 6px;
     overflow-y: auto;
+    /* Grid layout: foundations on right, stock/waste + tableau on left */
+    display: grid;
+    grid-template-columns: 1fr auto;
+    grid-template-rows: auto 1fr;
+    grid-template-areas:
+      "stock-waste foundations"
+      "tableau foundations";
   }
 
   .top-row {
-    flex-wrap: nowrap;
-    gap: 4px;
-    justify-content: space-between;
+    display: contents;
   }
 
   .stock-waste {
-    gap: 3px;
-    flex-shrink: 0;
+    grid-area: stock-waste;
+    gap: 4px;
+    display: flex;
   }
 
+  /* Foundations stack vertically on the right */
   .foundations {
-    gap: 2px;
-    flex-shrink: 1;
-    min-width: 0;
+    grid-area: foundations;
+    flex-direction: column;
+    gap: 4px;
+    align-self: start;
   }
 
-  /* Shrink foundation cards on mobile to fit */
   .foundations .pile {
-    width: calc((100vw - 120px) / 4);
-    max-width: var(--card-width);
+    width: var(--card-width);
   }
 
-  .foundations .pile-placeholder,
-  .foundations .card {
-    width: 100%;
-    height: auto;
-    aspect-ratio: 5 / 7;
-  }
-
-  /* Tableau flips to vertical stack of horizontal piles */
+  /* Tableau fills the left side below stock/waste */
   .tableau {
+    grid-area: tableau;
     flex-direction: column;
     align-items: flex-start;
     gap: 4px;
     overflow-y: auto;
     padding-bottom: 20px;
+    padding-right: 6px;
   }
 
   /* Each tableau pile becomes a horizontal row */
@@ -206,7 +207,6 @@
   .pile.tableau-pile .card {
     position: absolute;
     top: 0 !important;
-    /* Left offset is set via JS or CSS variables */
   }
 }
 
