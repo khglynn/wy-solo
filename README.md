@@ -13,7 +13,7 @@
 ████████████████████████████████████████████████████████████████
 ```
 
-**[LAUNCH TERMINAL →](https://classic-responsive-solitare.vercel.app)**
+**[LAUNCH TERMINAL →](https://retro-solitare-4recordos.vercel.app)**
 
 <!-- ![Solitaire Screenshot](screenshot.png) -->
 
@@ -72,7 +72,7 @@ Push to main. Auto-deployment configured.
 ### Iframe Integration
 ```html
 <iframe
-  src="https://classic-responsive-solitare.vercel.app"
+  src="https://retro-solitare-4recordos.vercel.app"
   width="700"
   height="500"
   style="border: none;"
