@@ -38,6 +38,21 @@ const WinAnimation = {
   init() {
     this.canvas = document.getElementById('win-canvas');
     this.ctx = this.canvas.getContext('2d');
+
+    // Click anywhere to dismiss
+    this.canvas.addEventListener('click', () => {
+      if (this.isRunning) {
+        this.stop();
+      }
+    });
+
+    // Escape or any key to dismiss
+    document.addEventListener('keydown', (e) => {
+      if (this.isRunning && (e.key === 'Escape' || e.key === ' ')) {
+        e.preventDefault();
+        this.stop();
+      }
+    });
   },
 
   start() {
