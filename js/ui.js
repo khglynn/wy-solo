@@ -42,6 +42,25 @@ const UI = {
     if (window.parent !== window) {
       document.getElementById('game-window').classList.add('iframe-mode');
     }
+
+    // Re-render on resize (handles orientation changes)
+    let resizeTimeout;
+    window.addEventListener('resize', () => {
+      clearTimeout(resizeTimeout);
+      resizeTimeout = setTimeout(() => {
+        if (Game.state) {
+          this.render();
+        }
+      }, 100);
+    });
+  },
+
+  /**
+   * Get rank display text
+   */
+  getRankDisplay(rank) {
+    const ranks = { 1: 'A', 11: 'J', 12: 'Q', 13: 'K' };
+    return ranks[rank] || rank.toString();
   },
 
   /**
@@ -73,6 +92,20 @@ const UI = {
     if (options.zIndex !== undefined) {
       el.style.zIndex = options.zIndex;
     }
+
+    // Add card face content (CSS handles suit symbols via ::before)
+    const rankDisplay = this.getRankDisplay(card.rank);
+    el.innerHTML = `
+      <div class="card-corner top">
+        <span class="card-rank">${rankDisplay}</span>
+        <span class="card-suit-small"></span>
+      </div>
+      <div class="card-center"></div>
+      <div class="card-corner bottom">
+        <span class="card-rank">${rankDisplay}</span>
+        <span class="card-suit-small"></span>
+      </div>
+    `;
 
     return el;
   },
@@ -163,6 +196,42 @@ const UI = {
   },
 
   /**
+   * Check if we're in mobile horizontal layout mode
+   */
+  isMobileLayout() {
+    return window.innerWidth <= 500;
+  },
+
+  /**
+   * Calculate mobile offsets that fit within available width
+   */
+  calculateMobileOffsets(pile, availableWidth, cardWidth) {
+    if (pile.length <= 1) return { faceUp: 0, faceDown: 0 };
+
+    // Count face-up and face-down cards (excluding last card which doesn't need offset)
+    let faceUpCount = 0;
+    let faceDownCount = 0;
+    for (let i = 0; i < pile.length - 1; i++) {
+      if (pile[i].faceUp) faceUpCount++;
+      else faceDownCount++;
+    }
+
+    // Calculate max offset we can use
+    // Total width = cardWidth + (faceUpCount * faceUpOffset) + (faceDownCount * faceDownOffset)
+    // Solve for offsets with faceUp being ~3x faceDown
+    const spaceForOffsets = availableWidth - cardWidth;
+    const weightedCount = faceUpCount * 3 + faceDownCount;
+
+    if (weightedCount === 0) return { faceUp: 20, faceDown: 8 };
+
+    const baseOffset = spaceForOffsets / weightedCount;
+    const faceDownOffset = Math.min(Math.max(baseOffset, 4), 10);
+    const faceUpOffset = Math.min(Math.max(baseOffset * 3, 12), 24);
+
+    return { faceUp: faceUpOffset, faceDown: faceDownOffset };
+  },
+
+  /**
    * Render the tableau
    */
   renderTableau() {
@@ -171,6 +240,11 @@ const UI = {
     const facedownOffset = parseFloat(getComputedStyle(document.documentElement)
       .getPropertyValue('--stack-offset-facedown')) || 6;
 
+    const isMobile = this.isMobileLayout();
+    const cardWidth = parseFloat(getComputedStyle(document.documentElement)
+      .getPropertyValue('--card-width')) || 60;
+    const availableWidth = window.innerWidth - 24; // Account for padding
+
     for (let i = 0; i < 7; i++) {
       const tableauEl = this.elements.tableau[i];
       const pile = Game.state.tableau[i];
@@ -178,7 +252,12 @@ const UI = {
       // Clear existing cards
       tableauEl.querySelectorAll('.card').forEach(el => el.remove());
 
-      let topOffset = 0;
+      // Calculate dynamic offsets for mobile
+      const mobileOffsets = isMobile
+        ? this.calculateMobileOffsets(pile, availableWidth, cardWidth)
+        : null;
+
+      let offset = 0;
 
       for (let j = 0; j < pile.length; j++) {
         const card = pile[j];
@@ -186,15 +265,26 @@ const UI = {
         const isLastFacedown = !card.faceUp && (j === pile.length - 1 || pile[j + 1]?.faceUp);
 
         const cardEl = this.createCardElement(card, {
-          top: topOffset,
           zIndex: j,
           flippable: isLastFacedown,
         });
 
+        // Position cards: vertical on desktop, horizontal on mobile
+        if (isMobile) {
+          cardEl.style.left = `${offset}px`;
+          cardEl.style.top = '0';
+        } else {
+          cardEl.style.top = `${offset}px`;
+        }
+
         tableauEl.appendChild(cardEl);
 
         // Calculate offset for next card
-        topOffset += card.faceUp ? stackOffset : facedownOffset;
+        if (isMobile) {
+          offset += card.faceUp ? mobileOffsets.faceUp : mobileOffsets.faceDown;
+        } else {
+          offset += card.faceUp ? stackOffset : facedownOffset;
+        }
       }
     }
   },

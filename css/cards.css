@@ -1,8 +1,8 @@
 /* Card Styling - Responsive + Retro */
 
 :root {
-  /* Card dimensions - vmin for viewport responsiveness */
-  --card-width: min(12vmin, 90px);
+  /* Card dimensions - responsive to viewport width for consistent 7-column fit */
+  --card-width: min(12vw, 90px);
   --card-height: calc(var(--card-width) * 1.4);
   --card-radius: 3px;
 
@@ -12,6 +12,27 @@
 
   /* Spacing */
   --pile-gap: clamp(8px, 1.5vmin, 16px);
+}
+
+/* Mobile: horizontal tableau layout */
+@media (max-width: 500px) {
+  :root {
+    /* Larger cards since they're stacked vertically now */
+    --card-width: min(18vw, 65px);
+    /* Horizontal stack offsets */
+    --stack-offset: clamp(18px, 5vw, 24px);
+    --stack-offset-facedown: clamp(6px, 2vw, 10px);
+    --pile-gap: clamp(3px, 1vw, 8px);
+  }
+}
+
+/* Small phones */
+@media (max-width: 380px) {
+  :root {
+    --card-width: min(17vw, 55px);
+    --stack-offset: clamp(16px, 4.5vw, 22px);
+    --stack-offset-facedown: clamp(5px, 1.5vw, 8px);
+  }
 }
 
 /* Container query support for iframe embedding */
@@ -34,34 +55,49 @@
   }
 }
 
-/* Card base */
+/* Card base - recordOS Matrix style */
 .card {
   width: var(--card-width);
   height: var(--card-height);
   border-radius: var(--card-radius);
-  background-color: white;
-  background-size: contain;
-  background-repeat: no-repeat;
-  background-position: center;
-  border: 1px solid #000;
-  box-shadow: 1px 1px 0 rgba(0, 0, 0, 0.5);
+  background-color: #1a1a1a;
+  border: 1px solid #3a3a3a;
+  box-shadow:
+    inset 1px 1px 0 #2a2a2a,
+    inset -1px -1px 0 #0a0a0a,
+    0 0 8px rgba(0, 255, 65, 0.15),
+    2px 2px 4px rgba(0, 0, 0, 0.5);
   position: absolute;
   cursor: pointer;
   user-select: none;
   touch-action: none;
-  transition: transform 0.08s ease;
-  image-rendering: auto;
+  transition: transform 0.08s ease, box-shadow 0.08s ease;
+  /* CSS-rendered card layout */
+  display: flex;
+  flex-direction: column;
+  padding: 3px;
+  box-sizing: border-box;
+  overflow: hidden;
 }
 
-/* Card hover state */
-.card:hover:not(.facedown) {
-  box-shadow: 2px 2px 0 rgba(0, 0, 0, 0.6);
+/* Card hover state - brighten and green glow */
+.card:hover {
+  background-color: #222;
+  box-shadow:
+    inset 1px 1px 0 #2a2a2a,
+    inset -1px -1px 0 #0a0a0a,
+    0 0 15px rgba(0, 255, 65, 0.3),
+    0 0 5px rgba(0, 255, 65, 0.2),
+    2px 2px 4px rgba(0, 0, 0, 0.5);
 }
 
 /* Card active/dragging state */
 .card.dragging {
   cursor: grabbing;
-  box-shadow: 3px 3px 6px rgba(0, 0, 0, 0.5);
+  box-shadow:
+    0 0 20px rgba(0, 255, 65, 0.4),
+    0 0 10px rgba(0, 255, 65, 0.3),
+    4px 4px 8px rgba(0, 0, 0, 0.6);
   z-index: 1000 !important;
   transform: scale(1.02);
 }
@@ -76,26 +112,32 @@
   box-shadow: 0 0 0 2px #00ff41, 1px 1px 0 rgba(0, 0, 0, 0.5);
 }
 
-/* Face-down card - Classic blue crosshatch pattern */
+/* Face-down card - recordOS Matrix style back */
 .card.facedown {
-  background-color: #000080;
+  background-color: #0d1f0d;
   background-image:
     repeating-linear-gradient(
       45deg,
       transparent,
       transparent 2px,
-      rgba(255,255,255,0.1) 2px,
-      rgba(255,255,255,0.1) 4px
+      rgba(0, 255, 65, 0.08) 2px,
+      rgba(0, 255, 65, 0.08) 4px
     ),
     repeating-linear-gradient(
       -45deg,
       transparent,
       transparent 2px,
-      rgba(255,255,255,0.1) 2px,
-      rgba(255,255,255,0.1) 4px
+      rgba(0, 255, 65, 0.08) 2px,
+      rgba(0, 255, 65, 0.08) 4px
     );
-  border: 2px solid #4040a0;
+  border: 1px solid #00cc33;
+  box-shadow:
+    inset 1px 1px 0 #1a3a1a,
+    inset -1px -1px 0 #0a0a0a,
+    0 0 10px rgba(0, 255, 65, 0.2),
+    2px 2px 4px rgba(0, 0, 0, 0.5);
   cursor: default;
+  filter: none;
 }
 
 /* Face-down but clickable (top of stock) */
@@ -108,115 +150,136 @@
   cursor: pointer;
 }
 
-/* Card face images */
-.card[data-suit="hearts"][data-rank="1"] { background-image: url('../cards/ace_of_hearts.svg'); }
-.card[data-suit="hearts"][data-rank="2"] { background-image: url('../cards/2_of_hearts.svg'); }
-.card[data-suit="hearts"][data-rank="3"] { background-image: url('../cards/3_of_hearts.svg'); }
-.card[data-suit="hearts"][data-rank="4"] { background-image: url('../cards/4_of_hearts.svg'); }
-.card[data-suit="hearts"][data-rank="5"] { background-image: url('../cards/5_of_hearts.svg'); }
-.card[data-suit="hearts"][data-rank="6"] { background-image: url('../cards/6_of_hearts.svg'); }
-.card[data-suit="hearts"][data-rank="7"] { background-image: url('../cards/7_of_hearts.svg'); }
-.card[data-suit="hearts"][data-rank="8"] { background-image: url('../cards/8_of_hearts.svg'); }
-.card[data-suit="hearts"][data-rank="9"] { background-image: url('../cards/9_of_hearts.svg'); }
-.card[data-suit="hearts"][data-rank="10"] { background-image: url('../cards/10_of_hearts.svg'); }
-.card[data-suit="hearts"][data-rank="11"] { background-image: url('../cards/jack_of_hearts.svg'); }
-.card[data-suit="hearts"][data-rank="12"] { background-image: url('../cards/queen_of_hearts.svg'); }
-.card[data-suit="hearts"][data-rank="13"] { background-image: url('../cards/king_of_hearts.svg'); }
+/* CSS-Rendered Card Face - recordOS Matrix Theme */
 
-.card[data-suit="diamonds"][data-rank="1"] { background-image: url('../cards/ace_of_diamonds.svg'); }
-.card[data-suit="diamonds"][data-rank="2"] { background-image: url('../cards/2_of_diamonds.svg'); }
-.card[data-suit="diamonds"][data-rank="3"] { background-image: url('../cards/3_of_diamonds.svg'); }
-.card[data-suit="diamonds"][data-rank="4"] { background-image: url('../cards/4_of_diamonds.svg'); }
-.card[data-suit="diamonds"][data-rank="5"] { background-image: url('../cards/5_of_diamonds.svg'); }
-.card[data-suit="diamonds"][data-rank="6"] { background-image: url('../cards/6_of_diamonds.svg'); }
-.card[data-suit="diamonds"][data-rank="7"] { background-image: url('../cards/7_of_diamonds.svg'); }
-.card[data-suit="diamonds"][data-rank="8"] { background-image: url('../cards/8_of_diamonds.svg'); }
-.card[data-suit="diamonds"][data-rank="9"] { background-image: url('../cards/9_of_diamonds.svg'); }
-.card[data-suit="diamonds"][data-rank="10"] { background-image: url('../cards/10_of_diamonds.svg'); }
-.card[data-suit="diamonds"][data-rank="11"] { background-image: url('../cards/jack_of_diamonds.svg'); }
-.card[data-suit="diamonds"][data-rank="12"] { background-image: url('../cards/queen_of_diamonds.svg'); }
-.card[data-suit="diamonds"][data-rank="13"] { background-image: url('../cards/king_of_diamonds.svg'); }
+/* Card content structure */
+.card-corner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  line-height: 1;
+  gap: 0;
+}
 
-.card[data-suit="clubs"][data-rank="1"] { background-image: url('../cards/ace_of_clubs.svg'); }
-.card[data-suit="clubs"][data-rank="2"] { background-image: url('../cards/2_of_clubs.svg'); }
-.card[data-suit="clubs"][data-rank="3"] { background-image: url('../cards/3_of_clubs.svg'); }
-.card[data-suit="clubs"][data-rank="4"] { background-image: url('../cards/4_of_clubs.svg'); }
-.card[data-suit="clubs"][data-rank="5"] { background-image: url('../cards/5_of_clubs.svg'); }
-.card[data-suit="clubs"][data-rank="6"] { background-image: url('../cards/6_of_clubs.svg'); }
-.card[data-suit="clubs"][data-rank="7"] { background-image: url('../cards/7_of_clubs.svg'); }
-.card[data-suit="clubs"][data-rank="8"] { background-image: url('../cards/8_of_clubs.svg'); }
-.card[data-suit="clubs"][data-rank="9"] { background-image: url('../cards/9_of_clubs.svg'); }
-.card[data-suit="clubs"][data-rank="10"] { background-image: url('../cards/10_of_clubs.svg'); }
-.card[data-suit="clubs"][data-rank="11"] { background-image: url('../cards/jack_of_clubs.svg'); }
-.card[data-suit="clubs"][data-rank="12"] { background-image: url('../cards/queen_of_clubs.svg'); }
-.card[data-suit="clubs"][data-rank="13"] { background-image: url('../cards/king_of_clubs.svg'); }
+.card-corner.top {
+  align-self: flex-start;
+}
 
-.card[data-suit="spades"][data-rank="1"] { background-image: url('../cards/ace_of_spades.svg'); }
-.card[data-suit="spades"][data-rank="2"] { background-image: url('../cards/2_of_spades.svg'); }
-.card[data-suit="spades"][data-rank="3"] { background-image: url('../cards/3_of_spades.svg'); }
-.card[data-suit="spades"][data-rank="4"] { background-image: url('../cards/4_of_spades.svg'); }
-.card[data-suit="spades"][data-rank="5"] { background-image: url('../cards/5_of_spades.svg'); }
-.card[data-suit="spades"][data-rank="6"] { background-image: url('../cards/6_of_spades.svg'); }
-.card[data-suit="spades"][data-rank="7"] { background-image: url('../cards/7_of_spades.svg'); }
-.card[data-suit="spades"][data-rank="8"] { background-image: url('../cards/8_of_spades.svg'); }
-.card[data-suit="spades"][data-rank="9"] { background-image: url('../cards/9_of_spades.svg'); }
-.card[data-suit="spades"][data-rank="10"] { background-image: url('../cards/10_of_spades.svg'); }
-.card[data-suit="spades"][data-rank="11"] { background-image: url('../cards/jack_of_spades.svg'); }
-.card[data-suit="spades"][data-rank="12"] { background-image: url('../cards/queen_of_spades.svg'); }
-.card[data-suit="spades"][data-rank="13"] { background-image: url('../cards/king_of_spades.svg'); }
+.card-corner.bottom {
+  align-self: flex-end;
+  transform: rotate(180deg);
+  margin-top: auto;
+}
 
-/* Pile placeholders - Classic card back outline style */
+.card-rank {
+  font-family: 'Courier New', Courier, monospace;
+  font-weight: bold;
+  font-size: calc(var(--card-width) * 0.22);
+  line-height: 1;
+}
+
+.card-suit-small {
+  font-size: calc(var(--card-width) * 0.18);
+  line-height: 1;
+}
+
+.card-center {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(var(--card-width) * 0.45);
+}
+
+/* Suit colors - recordOS theme */
+.card[data-suit="hearts"],
+.card[data-suit="diamonds"] {
+  color: #ff4444; /* Red suits - warm accent */
+}
+
+.card[data-suit="clubs"],
+.card[data-suit="spades"] {
+  color: #00ff41; /* Green suits - Matrix theme */
+}
+
+/* Suit symbols */
+.card[data-suit="hearts"] .card-suit-small::before,
+.card[data-suit="hearts"] .card-center::before { content: '♥'; }
+
+.card[data-suit="diamonds"] .card-suit-small::before,
+.card[data-suit="diamonds"] .card-center::before { content: '♦'; }
+
+.card[data-suit="clubs"] .card-suit-small::before,
+.card[data-suit="clubs"] .card-center::before { content: '♣'; }
+
+.card[data-suit="spades"] .card-suit-small::before,
+.card[data-suit="spades"] .card-center::before { content: '♠'; }
+
+/* Face cards get special center display */
+.card[data-rank="11"] .card-center::before,
+.card[data-rank="12"] .card-center::before,
+.card[data-rank="13"] .card-center::before {
+  content: none;
+}
+
+.card[data-rank="11"] .card-center::after { content: 'J'; font-family: 'Courier New', monospace; font-weight: bold; }
+.card[data-rank="12"] .card-center::after { content: 'Q'; font-family: 'Courier New', monospace; font-weight: bold; }
+.card[data-rank="13"] .card-center::after { content: 'K'; font-family: 'Courier New', monospace; font-weight: bold; }
+
+/* Facedown cards hide content */
+.card.facedown .card-corner,
+.card.facedown .card-center {
+  display: none;
+}
+
+/* Pile placeholders - recordOS Matrix style */
 .pile-placeholder {
   width: var(--card-width);
   height: var(--card-height);
-  border: 2px solid #000080;
+  border: 1px solid #2a2a2a;
   border-radius: var(--card-radius);
   display: flex;
   align-items: center;
   justify-content: center;
   font-size: calc(var(--card-width) * 0.4);
-  color: rgba(255, 255, 255, 0.2);
-  background-color: #000060;
-  background-image:
-    repeating-linear-gradient(
-      45deg,
-      transparent,
-      transparent 2px,
-      rgba(255,255,255,0.05) 2px,
-      rgba(255,255,255,0.05) 4px
-    ),
-    repeating-linear-gradient(
-      -45deg,
-      transparent,
-      transparent 2px,
-      rgba(255,255,255,0.05) 2px,
-      rgba(255,255,255,0.05) 4px
-    );
+  color: rgba(0, 255, 65, 0.2);
+  background-color: #0d0d0d;
+  box-shadow:
+    inset 1px 1px 0 #1a1a1a,
+    inset -1px -1px 0 #0a0a0a;
 }
 
-/* Stock pile - show recycle icon when empty */
+/* Stock pile - show pixel art reload icon when empty */
 .pile.stock.empty .pile-placeholder {
   cursor: pointer;
 }
 
 .pile.stock.empty .pile-placeholder::after {
-  content: '↻';
-  font-size: calc(var(--card-width) * 0.5);
-  color: rgba(255, 255, 255, 0.4);
+  content: '';
+  display: block;
+  width: calc(var(--card-width) * 0.5);
+  height: calc(var(--card-width) * 0.5);
+  /* Pixelarticons reload icon v1.8.1 - Matrix green */
+  background-image: url("data:image/svg+xml,%3Csvg fill='none' xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M16 2h-2v2h2v2H4v2H2v5h2V8h12v2h-2v2h2v-2h2V8h2V6h-2V4h-2V2zM6 20h2v2h2v-2H8v-2h12v-2h2v-5h-2v5H8v-2h2v-2H8v2H6v2H4v2h2v2z' fill='%2300ff41'/%3E%3C/svg%3E");
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  image-rendering: pixelated;
+  opacity: 0.6;
 }
 
 /* Foundation pile - valid drop highlight */
 .pile.foundation.valid-drop .pile-placeholder,
 .pile.foundation.valid-drop .card:last-child {
-  box-shadow: 0 0 0 2px #00ff41, 0 0 8px rgba(0, 255, 65, 0.5);
+  box-shadow: 0 0 0 2px #00ff41, 0 0 15px rgba(0, 255, 65, 0.4);
 }
 
 /* Tableau pile - valid drop highlight */
 .pile.tableau-pile.valid-drop {
-  background: rgba(0, 255, 65, 0.1);
+  background: rgba(0, 255, 65, 0.05);
   border-radius: var(--card-radius);
 }
 
 .pile.tableau-pile.valid-drop .card:last-child {
-  box-shadow: 0 0 0 2px #00ff41, 1px 1px 0 rgba(0, 0, 0, 0.5);
+  box-shadow: 0 0 0 2px #00ff41, 0 0 15px rgba(0, 255, 65, 0.4);
 }
