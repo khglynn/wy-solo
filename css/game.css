@@ -27,7 +27,7 @@
       rgba(0, 255, 65, 0.04) 9px,
       rgba(0, 255, 65, 0.04) 10px
     ),
-    /* Subtle radial glow in center */
+    /* Subtle center vignette */
     radial-gradient(ellipse at center, #0d1a0d 0%, #0a0a0a 70%);
   padding: clamp(10px, 2vmin, 20px);
   display: flex;

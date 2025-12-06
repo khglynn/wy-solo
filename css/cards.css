@@ -65,8 +65,7 @@
   box-shadow:
     inset 1px 1px 0 #2a2a2a,
     inset -1px -1px 0 #0a0a0a,
-    0 0 8px rgba(0, 255, 65, 0.15),
-    2px 2px 4px rgba(0, 0, 0, 0.5);
+    2px 2px 0 rgba(0, 0, 0, 0.5);
   position: absolute;
   cursor: pointer;
   user-select: none;
@@ -127,8 +126,7 @@
   box-shadow:
     inset 1px 1px 0 #1a3a1a,
     inset -1px -1px 0 #0a0a0a,
-    0 0 10px rgba(0, 255, 65, 0.2),
-    2px 2px 4px rgba(0, 0, 0, 0.5);
+    2px 2px 0 rgba(0, 0, 0, 0.5);
   cursor: default;
   filter: none;
 }
@@ -165,9 +163,9 @@
 }
 
 .card-rank {
-  font-family: 'Courier New', Courier, monospace;
-  font-weight: bold;
-  font-size: calc(var(--card-width) * 0.22);
+  font-family: 'VT323', monospace;
+  font-weight: normal;
+  font-size: calc(var(--card-width) * 0.28);
   line-height: 1;
 }
 
@@ -215,9 +213,9 @@
   content: none;
 }
 
-.card[data-rank="11"] .card-center::after { content: 'J'; font-family: 'Courier New', monospace; font-weight: bold; }
-.card[data-rank="12"] .card-center::after { content: 'Q'; font-family: 'Courier New', monospace; font-weight: bold; }
-.card[data-rank="13"] .card-center::after { content: 'K'; font-family: 'Courier New', monospace; font-weight: bold; }
+.card[data-rank="11"] .card-center::after { content: 'J'; font-family: 'VT323', monospace; }
+.card[data-rank="12"] .card-center::after { content: 'Q'; font-family: 'VT323', monospace; }
+.card[data-rank="13"] .card-center::after { content: 'K'; font-family: 'VT323', monospace; }
 
 /* Facedown cards hide content */
 .card.facedown .card-corner,

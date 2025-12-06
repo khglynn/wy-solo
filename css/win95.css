@@ -1,5 +1,8 @@
 /* Windows 95 UI Components - recordOS Dark Theme */
 
+/* Pixel font for 8-bit aesthetic */
+@import url('https://fonts.googleapis.com/css2?family=VT323&display=swap');
+
 * {
   margin: 0;
   padding: 0;
@@ -16,7 +19,6 @@
   --green-primary: #00ff41;
   --green-dark: #00cc33;
   --green-darker: #0a2a0a;
-  --green-glow: rgba(0, 255, 65, 0.3);
 
   --text-primary: #00ff41;
   --text-dim: #4a4a4a;
@@ -33,8 +35,8 @@ html, body {
 }
 
 body {
-  font-family: 'MS Sans Serif', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  font-size: 11px;
+  font-family: 'VT323', 'MS Sans Serif', monospace;
+  font-size: 14px;
   background: var(--bg-darkest);
   color: var(--text-primary);
   -webkit-font-smoothing: none;
@@ -70,7 +72,6 @@ body {
   font-weight: bold;
   font-size: 12px;
   padding-left: 2px;
-  text-shadow: 0 0 8px var(--green-glow);
 }
 
 /* Hide window controls - not functional */
@@ -102,7 +103,6 @@ body {
 .menu-item.active .menu-label {
   background: var(--green-darker);
   color: var(--green-primary);
-  text-shadow: 0 0 5px var(--green-glow);
 }
 
 .menu-dropdown {
@@ -113,7 +113,7 @@ body {
   background: var(--bg-dark);
   border: 2px solid;
   border-color: var(--border-light) var(--border-dark) var(--border-dark) var(--border-light);
-  box-shadow: 2px 2px 0 rgba(0,0,0,0.5), 0 0 10px var(--green-glow);
+  box-shadow: 2px 2px 0 rgba(0,0,0,0.5);
   min-width: 180px;
   z-index: 1000;
 }
@@ -138,7 +138,6 @@ body {
 .menu-option:hover {
   background: var(--green-darker);
   color: var(--green-primary);
-  text-shadow: 0 0 5px var(--green-glow);
 }
 
 .menu-option.checked::before {
@@ -193,7 +192,6 @@ body {
 
 .win95-btn:hover {
   background: linear-gradient(180deg, var(--green-darker) 0%, #0a1a0a 100%);
-  text-shadow: 0 0 5px var(--green-glow);
 }
 
 .win95-btn:active {
@@ -230,7 +228,7 @@ body {
   max-width: 90vw;
   max-height: 90vh;
   overflow: auto;
-  box-shadow: 0 0 20px var(--green-glow);
+  box-shadow: 4px 4px 0 rgba(0,0,0,0.5);
 }
 
 .modal-content {
@@ -282,7 +280,6 @@ legend {
   margin-bottom: 10px;
   letter-spacing: 6px;
   color: var(--green-primary);
-  text-shadow: 0 0 10px var(--green-glow);
 }
 
 .about-content h2 {
@@ -311,7 +308,6 @@ legend {
 
 .about-links a:hover {
   text-decoration: underline;
-  text-shadow: 0 0 5px var(--green-glow);
 }
 
 .about-content hr {
