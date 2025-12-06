@@ -43,8 +43,8 @@ const App = {
    * Start a new game
    */
   newGame() {
-    // Stop any running animation
-    WinAnimation.stop();
+    // Stop any running animation (without triggering callback)
+    WinAnimation.stop(false);
 
     // Initialize game state
     Game.newGame();

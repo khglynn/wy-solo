@@ -16,7 +16,15 @@
 
 **[LAUNCH TERMINAL →](https://retro-solitare-4recordos.vercel.app)**
 
-<!-- ![Solitaire Screenshot](screenshot.png) -->
+![SOLO.EXE Desktop](screenshot-desktop.png)
+
+<details>
+<summary>Mobile & Win Animation</summary>
+
+![Mobile Layout](screenshot-mobile.png)
+![Win Animation](screenshot-animation.png)
+
+</details>
 
 ## SYSTEM REQUIREMENTS
 
