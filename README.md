@@ -1,4 +1,4 @@
-# SOLO.EXE
+# WY Solo
 
 ```
 ████████████████████████████████████████████████████████████████
@@ -11,10 +11,12 @@
 █   > Press H for hint. We know you'll need it.                █
 █   > Press W for victory simulation.                          █
 █                                                              █
+█   "Building better worlds."                                  █
+█                                                              █
 ████████████████████████████████████████████████████████████████
 ```
 
-**[LAUNCH TERMINAL →](https://retro-solitare-4recordos.vercel.app)**
+**[LAUNCH TERMINAL →](https://wy-solo.vercel.app)**
 
 ![SOLO.EXE Desktop](screenshot-desktop.png)
 
@@ -147,11 +149,11 @@ MIT. Do whatever you want. We're not liable for time lost.
 
 ```
 [TERMINAL OUTPUT]
-> SOLO.EXE loaded successfully.
+> WY Solo loaded successfully.
 > 52 cards initialized.
 > 200 winnable seeds verified.
 > Awaiting user input...
 > _
 ```
 
-Built for [recordOS](https://github.com/khglynn/recordOS)
+Built for [recordOS](https://github.com/khglynn/recordOS) | [GitHub](https://github.com/khglynn/wy-solo)

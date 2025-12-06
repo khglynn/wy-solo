@@ -33,6 +33,21 @@
   display: flex;
   flex-direction: column;
   gap: clamp(14px, 3vmin, 26px);
+  position: relative;
+}
+
+/* Weyland-Yutani watermark */
+.game-table::after {
+  content: 'WEYLAND-YUTANI CORP // BUILDING BETTER WORLDS';
+  position: absolute;
+  bottom: 8px;
+  right: 10px;
+  font-family: 'VT323', monospace;
+  font-size: 10px;
+  color: rgba(0, 255, 65, 0.12);
+  letter-spacing: 1px;
+  pointer-events: none;
+  white-space: nowrap;
 }
 
 /* Top row: Stock, Waste, and Foundations */
