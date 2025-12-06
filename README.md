@@ -1,14 +1,15 @@
-# SOLITAIRE.EXE
+# SOL.EXE
 
 ```
 ████████████████████████████████████████████████████████████████
 █                                                              █
 █   WEYLAND-YUTANI RECREATIONAL TERMINAL v3.1                  █
-█   KLONDIKE SOLITAIRE MODULE                                  █
+█   KLONDIKE MODULE // BUILD 1990.12.05                        █
 █   ─────────────────────────────────────────────────────────  █
 █                                                              █
 █   > All games winnable. Productivity loss guaranteed.        █
 █   > Press H for hint. We know you'll need it.                █
+█   > Press W for victory simulation.                          █
 █                                                              █
 ████████████████████████████████████████████████████████████████
 ```
@@ -116,6 +117,8 @@ Seed list curated for guaranteed solvability.
 DEVELOPED BY .............. Kevin HG
 ORIGINAL INSPIRATION ...... Microsoft Solitaire (1990)
 AESTHETIC FRAMEWORK ....... recordOS Matrix Theme
+ICONS ..................... Pixelarticons (pixelarticons.com)
+TYPOGRAPHY ................ VT323 by Peter Hull (Google Fonts)
 
 "Building a better world."
     — Weyland-Yutani Corporation
@@ -136,8 +139,9 @@ MIT. Do whatever you want. We're not liable for time lost.
 
 ```
 [TERMINAL OUTPUT]
-> Module loaded successfully.
+> SOL.EXE loaded successfully.
 > 52 cards initialized.
+> 200 winnable seeds verified.
 > Awaiting user input...
 > _
 ```

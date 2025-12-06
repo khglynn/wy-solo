@@ -231,6 +231,12 @@ body {
   box-shadow: 4px 4px 0 rgba(0,0,0,0.5);
 }
 
+/* Override window height for modals - fit content, don't stretch */
+.modal.window {
+  height: auto;
+  flex: none;
+}
+
 .modal-content {
   padding: 16px;
   background: var(--bg-dark);
@@ -319,6 +325,15 @@ legend {
 .about-credits {
   font-size: 10px;
   color: var(--text-dim);
+}
+
+.about-credits a {
+  color: var(--text-dim);
+  text-decoration: underline;
+}
+
+.about-credits a:hover {
+  color: var(--green-primary);
 }
 
 /* Help Modal */
