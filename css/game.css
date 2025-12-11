@@ -277,11 +277,31 @@
 
 /* Iframe mode detection - minimal chrome */
 .iframe-mode .title-bar {
-  padding: 2px 4px;
+  display: none;
+}
+
+.iframe-mode .menu-bar {
+  padding: 1px 0;
+}
+
+.iframe-mode .menu-label {
+  padding: 2px 8px;
+  font-size: 11px;
 }
 
 .iframe-mode .status-bar {
   padding: 2px 4px;
+}
+
+.iframe-mode .status-field {
+  min-width: 50px;
+  padding: 1px 4px;
+  font-size: 11px;
+}
+
+/* Hide watermark in iframe - recordOS already has its own branding */
+.iframe-mode .game-table::after {
+  display: none;
 }
 
 /* High contrast/accessibility */

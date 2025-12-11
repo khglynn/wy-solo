@@ -16,6 +16,9 @@ const App = {
    * Initialize the application
    */
   init() {
+    // Detect iframe embedding
+    this.detectIframe();
+
     // Initialize modules
     UI.init();
     Drag.init();
@@ -36,7 +39,18 @@ const App = {
     // Update menu checkmarks
     this.updateMenuCheckmarks();
 
-    console.log('Solitaire initialized! Press W to test win animation.');
+    console.log('Solitaire initialized!');
+  },
+
+  /**
+   * Detect if running inside an iframe and apply minimal chrome
+   */
+  detectIframe() {
+    const isIframe = window !== window.top;
+    if (isIframe) {
+      document.body.classList.add('iframe-mode');
+      document.getElementById('game-window')?.classList.add('iframe-mode');
+    }
   },
 
   /**
