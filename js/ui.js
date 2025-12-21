@@ -89,6 +89,10 @@ const UI = {
       el.style.top = `${options.top}px`;
     }
 
+    if (options.left !== undefined) {
+      el.style.left = `${options.left}px`;
+    }
+
     if (options.zIndex !== undefined) {
       el.style.zIndex = options.zIndex;
     }
@@ -138,6 +142,7 @@ const UI = {
 
   /**
    * Render the waste pile
+   * Uses explicit left positioning instead of CSS nth-last-child (more reliable)
    */
   renderWaste() {
     const waste = this.elements.waste;
@@ -148,15 +153,25 @@ const UI = {
     const wasteCards = Game.state.waste;
     if (wasteCards.length === 0) return;
 
+    // Get pile gap from CSS variable for consistent spacing
+    const pileGap = parseFloat(getComputedStyle(document.documentElement)
+      .getPropertyValue('--pile-gap')) || 12;
+
     // Show up to 3 cards (or drawCount if draw 1)
     const visibleCount = Game.settings.drawCount === 1 ? 1 : Math.min(3, wasteCards.length);
     const startIndex = Math.max(0, wasteCards.length - visibleCount);
 
-    for (let i = startIndex; i < wasteCards.length; i++) {
-      const card = wasteCards[i];
-      const isTop = (i === wasteCards.length - 1);
+    // Calculate positions for visible cards
+    const visibleCards = wasteCards.slice(startIndex);
+
+    for (let i = 0; i < visibleCards.length; i++) {
+      const card = visibleCards[i];
+      const isTop = (i === visibleCards.length - 1);
+      const leftOffset = i * pileGap;
+
       const cardEl = this.createCardElement(card, {
-        zIndex: i - startIndex,
+        zIndex: i,
+        left: leftOffset,
       });
 
       // Only the top card is interactive
