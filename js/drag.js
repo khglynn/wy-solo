@@ -52,9 +52,12 @@ const Drag = {
     // Check if card is interactive
     const card = this.getCardFromLocation(location);
 
-    // Handle stock pile click
+    // Handle stock pile click directly (touchstart.preventDefault blocks click events)
     if (location.location === 'stock') {
-      return; // Stock is handled by click
+      if (Game.drawFromStock()) {
+        UI.render();
+      }
+      return;
     }
 
     // Can't drag face-down cards (except to flip them)
