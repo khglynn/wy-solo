@@ -440,11 +440,13 @@ const App = {
 
   /**
    * Set up stock pile click handler
+   * Uses both click (desktop) and touchend (mobile) because
+   * drag.js calls touchstart.preventDefault() which blocks click on mobile
    */
   setupStockClick() {
     const stock = document.getElementById('stock');
 
-    stock.addEventListener('click', (e) => {
+    const handleStockTap = () => {
       // Don't trigger if we're dragging
       if (Drag.isDragging) return;
 
@@ -452,6 +454,20 @@ const App = {
       if (Game.drawFromStock()) {
         UI.render();
       }
+    };
+
+    // Desktop: click event
+    stock.addEventListener('click', handleStockTap);
+
+    // Mobile: touchend event (click is blocked by drag.js touchstart.preventDefault)
+    stock.addEventListener('touchend', (e) => {
+      // Only handle if touch ended on stock pile
+      const touch = e.changedTouches[0];
+      const element = document.elementFromPoint(touch.clientX, touch.clientY);
+      if (!stock.contains(element)) return;
+
+      e.preventDefault();
+      handleStockTap();
     });
   },
 
