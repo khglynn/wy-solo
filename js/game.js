@@ -294,6 +294,12 @@ const Game = {
    * Find where a card currently is
    */
   findCard(cardId) {
+    // Check stock (needed for mobile touch handling)
+    const stockIndex = this.state.stock.findIndex(c => c.id === cardId);
+    if (stockIndex !== -1) {
+      return { location: 'stock', index: stockIndex };
+    }
+
     // Check waste
     const wasteIndex = this.state.waste.findIndex(c => c.id === cardId);
     if (wasteIndex !== -1) {
