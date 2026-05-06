@@ -8,3 +8,4 @@ classic-responsive-solitare-archived-reference/
 
 # Auto-memory directory (per-machine Claude Code project memory)
 .remember/
+.vercel
