@@ -9,3 +9,6 @@ classic-responsive-solitare-archived-reference/
 # Auto-memory directory (per-machine Claude Code project memory)
 .remember/
 .vercel
+
+# Claude Code project memory — keep out of this public repo
+.claude-memory/
